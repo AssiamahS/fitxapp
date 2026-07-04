@@ -168,8 +168,9 @@ final class FitXTests: XCTestCase {
         ])]
         store.importWorkout(workout)
 
-        // 100kg × 5 → Epley ≈ 116.7, beats the 140 single.
-        XCTAssertEqual(store.bestOneRepMax(for: squat.id), 100 * (1 + 5.0 / 30.0), accuracy: 0.01)
+        // 140 single (1RM 140) beats 100×5 (Epley ≈ 116.7); the incomplete
+        // 200×10 would win but must be ignored.
+        XCTAssertEqual(store.bestOneRepMax(for: squat.id), 140, accuracy: 0.01)
     }
 
     func testEpleyOneRepMax() {
