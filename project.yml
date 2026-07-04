@@ -1,0 +1,76 @@
+name: FitX
+options:
+  bundleIdPrefix: com.assiamah
+  deploymentTarget:
+    iOS: "17.0"
+    watchOS: "10.0"
+  createIntermediateGroups: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: 0.1.1
+    CURRENT_PROJECT_VERSION: 1
+
+targets:
+  FitX:
+    type: application
+    platform: iOS
+    sources:
+      - FitX
+      - Shared
+    dependencies:
+      - target: FitXWatch
+    info:
+      path: FitX/Info.plist
+      properties:
+        CFBundleDisplayName: FitX
+        UILaunchScreen: {}
+        UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.assiamah.fitx
+        TARGETED_DEVICE_FAMILY: "1"
+
+  FitXWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - FitXWatch
+      - Shared
+    info:
+      path: FitXWatch/Info.plist
+      properties:
+        CFBundleDisplayName: FitX
+        WKApplication: true
+        WKCompanionAppBundleIdentifier: com.assiamah.fitx
+        WKRunsIndependentlyOfCompanionApp: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.assiamah.fitx.watchkitapp
+
+  FitXTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FitXTests
+      - Shared
+
+schemes:
+  FitX:
+    build:
+      targets:
+        FitX: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      targets:
+        - FitXTests
+  FitXWatch:
+    build:
+      targets:
+        FitXWatch: all
+    run:
+      config: Debug
