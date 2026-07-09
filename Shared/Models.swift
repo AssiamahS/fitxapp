@@ -4,6 +4,28 @@ enum AppConfig {
     static let defaultRestSeconds: TimeInterval = 90
 }
 
+enum WeightUnit: String, Codable, CaseIterable, Identifiable {
+    case kg, lb
+
+    var id: String { rawValue }
+    var suffix: String { rawValue }
+
+    private static let lbPerKg = 2.204_622_621_8
+
+    func fromKg(_ kg: Double) -> Double {
+        self == .kg ? kg : kg * Self.lbPerKg
+    }
+
+    func toKg(_ value: Double) -> Double {
+        self == .kg ? value : value / Self.lbPerKg
+    }
+}
+
+struct UserSettings: Codable, Hashable {
+    var weightUnit: WeightUnit = .kg
+    var restSeconds: TimeInterval = AppConfig.defaultRestSeconds
+}
+
 enum MuscleGroup: String, Codable, CaseIterable, Identifiable {
     case chest, back, shoulders, biceps, triceps, forearms
     case quads, hamstrings, glutes, calves
@@ -56,6 +78,8 @@ struct Exercise: Codable, Identifiable, Hashable {
         self.isCustom = isCustom
     }
 
+    var isCardio: Bool { muscleGroup == .cardio }
+
     static func slug(for name: String) -> String {
         name.lowercased()
             .replacingOccurrences(of: " ", with: "-")
@@ -67,8 +91,10 @@ struct Exercise: Codable, Identifiable, Hashable {
 struct WorkoutSet: Codable, Identifiable, Hashable {
     var id: UUID = UUID()
     var type: SetType = .normal
-    var weight: Double = 0
+    var weight: Double = 0            // stored in kg
     var reps: Int = 0
+    var durationSeconds: Double? = nil // cardio
+    var distanceMeters: Double? = nil  // cardio
     var isCompleted: Bool = false
 
     var volume: Double { isCompleted ? weight * Double(reps) : 0 }
@@ -91,6 +117,10 @@ struct Workout: Codable, Identifiable, Hashable {
     var endDate: Date? = nil
     var exercises: [WorkoutExercise] = []
     var notes: String = ""
+    // Filled in by the watch when a HealthKit session ran alongside.
+    var avgHeartRate: Double? = nil
+    var maxHeartRate: Double? = nil
+    var activeCalories: Double? = nil
 
     var duration: TimeInterval { duration(asOf: Date()) }
 
@@ -118,6 +148,25 @@ struct WorkoutTemplate: Codable, Identifiable, Hashable {
     }
 }
 
+struct BodyWeightEntry: Codable, Identifiable, Hashable {
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var weightKg: Double
+}
+
+/// Live metrics mirrored from a running watch workout. Never persisted.
+struct WatchLiveMetrics: Hashable {
+    var heartRate: Double
+    var activeCalories: Double
+    var elapsed: TimeInterval
+    var title: String
+    var updatedAt: Date
+
+    func isFresh(asOf now: Date = Date()) -> Bool {
+        now.timeIntervalSince(updatedAt) < 20
+    }
+}
+
 enum Stats {
     /// Epley estimated one-rep max. Returns the weight itself for a single rep.
     static func epleyOneRepMax(weight: Double, reps: Int) -> Double {
@@ -138,13 +187,18 @@ enum Stats {
     }
 
     static func formattedWeight(_ kg: Double) -> String {
-        if kg == kg.rounded() {
-            return String(format: "%.0f kg", kg)
-        }
-        return String(format: "%.1f kg", kg)
+        formattedWeight(kg, unit: .kg)
     }
 
-    static func formattedVolume(_ kg: Double) -> String {
-        String(format: "%.0f kg", kg)
+    static func formattedWeight(_ kg: Double, unit: WeightUnit) -> String {
+        let value = unit.fromKg(kg)
+        if abs(value - value.rounded()) < 0.05 {
+            return String(format: "%.0f %@", value.rounded(), unit.suffix)
+        }
+        return String(format: "%.1f %@", value, unit.suffix)
+    }
+
+    static func formattedVolume(_ kg: Double, unit: WeightUnit = .kg) -> String {
+        String(format: "%.0f %@", unit.fromKg(kg), unit.suffix)
     }
 }

@@ -4,29 +4,52 @@ struct ExercisePickerView: View {
     @Environment(WorkoutStore.self) private var store
     @Environment(\.dismiss) private var dismiss
     @State private var search = ""
+    @State private var muscleFilter: MuscleGroup?
     var onSelect: (Exercise) -> Void
 
     private var filtered: [Exercise] {
-        let all = store.allExercises
+        var all = store.allExercises
+        if let muscleFilter {
+            all = all.filter { $0.muscleGroup == muscleFilter }
+        }
         guard !search.isEmpty else { return all }
         return all.filter { $0.name.localizedCaseInsensitiveContains(search) }
     }
 
     var body: some View {
         NavigationStack {
-            List(filtered) { exercise in
-                Button {
-                    onSelect(exercise)
-                    dismiss()
-                } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(exercise.name)
-                            .foregroundStyle(.primary)
-                        Text(exercise.muscleGroup.displayName)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+            VStack(spacing: 0) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        FilterChip(title: "All", isOn: muscleFilter == nil) { muscleFilter = nil }
+                        ForEach(MuscleGroup.allCases) { group in
+                            FilterChip(title: group.displayName, isOn: muscleFilter == group) {
+                                muscleFilter = muscleFilter == group ? nil : group
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 6)
+                }
+
+                List(filtered) { exercise in
+                    Button {
+                        onSelect(exercise)
+                        dismiss()
+                    } label: {
+                        HStack(spacing: 12) {
+                            ExerciseThumbnail(exerciseID: exercise.id)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(exercise.name)
+                                    .foregroundStyle(.primary)
+                                Text(exercise.muscleGroup.displayName)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
                 }
+                .listStyle(.plain)
             }
             .searchable(text: $search, prompt: "Search exercises")
             .navigationTitle("Add Exercise")
@@ -45,6 +68,24 @@ struct ExercisePickerView: View {
                 }
             }
         }
+    }
+}
+
+struct FilterChip: View {
+    let title: String
+    let isOn: Bool
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.caption.bold())
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(isOn ? Color.blue : Color.blue.opacity(0.12), in: Capsule())
+                .foregroundStyle(isOn ? .white : .blue)
+        }
+        .buttonStyle(.plain)
     }
 }
 
