@@ -9,7 +9,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    MARKETING_VERSION: 0.1.3
+    MARKETING_VERSION: 2.0.3
     CURRENT_PROJECT_VERSION: 1
 
 targets:
@@ -21,6 +21,11 @@ targets:
       - Shared
     dependencies:
       - target: FitXWatch
+      - target: FitXWidgets
+    entitlements:
+      path: FitX/FitX.entitlements
+      properties:
+        com.apple.developer.healthkit: true
     info:
       path: FitX/Info.plist
       properties:
@@ -28,6 +33,10 @@ targets:
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         ITSAppUsesNonExemptEncryption: false
+        NSSupportsLiveActivities: true
+        NSHealthShareUsageDescription: FitX reads your steps and active energy to show daily activity next to your macros.
+        NSHealthUpdateUsageDescription: FitX saves your strength workouts to Apple Health.
+        NSCameraUsageDescription: FitX uses the camera to scan barcodes and detect foods so you can log macros fast.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.assiamah.fitx
@@ -39,6 +48,12 @@ targets:
     sources:
       - FitXWatch
       - Shared
+      - path: FitX/Resources
+        buildPhase: resources
+    entitlements:
+      path: FitXWatch/FitXWatch.entitlements
+      properties:
+        com.apple.developer.healthkit: true
     info:
       path: FitXWatch/Info.plist
       properties:
@@ -46,9 +61,29 @@ targets:
         WKApplication: true
         WKCompanionAppBundleIdentifier: com.assiamah.fitx
         WKRunsIndependentlyOfCompanionApp: true
+        WKBackgroundModes: [workout-processing]
+        NSHealthShareUsageDescription: FitX reads your heart rate and active energy during workouts.
+        NSHealthUpdateUsageDescription: FitX saves your workouts with heart rate to Apple Health.
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.assiamah.fitx.watchkitapp
+
+  FitXWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - FitXWidgets
+      - path: Shared/WorkoutActivityAttributes.swift
+    info:
+      path: FitXWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: FitX
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.assiamah.fitx.widgets
+        SKIP_INSTALL: true
 
   FitXTests:
     type: bundle.unit-test

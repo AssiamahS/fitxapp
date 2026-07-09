@@ -20,8 +20,16 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>FitX reads your heart rate and active energy during workouts.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>FitX saves your workouts with heart rate to Apple Health.</string>
 	<key>WKApplication</key>
 	<true/>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>workout-processing</string>
+	</array>
 	<key>WKCompanionAppBundleIdentifier</key>
 	<string>com.assiamah.fitx</string>
 	<key>WKRunsIndependentlyOfCompanionApp</key>

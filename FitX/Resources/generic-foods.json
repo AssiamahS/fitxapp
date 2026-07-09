@@ -1,0 +1,732 @@
+[
+ {
+  "name": "Banana",
+  "caloriesPer100g": 89,
+  "proteinPer100g": 1.1,
+  "carbsPer100g": 22.8,
+  "fatPer100g": 0.3,
+  "servingGrams": 118,
+  "synonyms": [
+   "bananas"
+  ]
+ },
+ {
+  "name": "Apple",
+  "caloriesPer100g": 52,
+  "proteinPer100g": 0.3,
+  "carbsPer100g": 13.8,
+  "fatPer100g": 0.2,
+  "servingGrams": 182,
+  "synonyms": [
+   "apples"
+  ]
+ },
+ {
+  "name": "Orange",
+  "caloriesPer100g": 47,
+  "proteinPer100g": 0.9,
+  "carbsPer100g": 11.8,
+  "fatPer100g": 0.1,
+  "servingGrams": 131,
+  "synonyms": [
+   "oranges",
+   "clementine",
+   "tangerine"
+  ]
+ },
+ {
+  "name": "Strawberries",
+  "caloriesPer100g": 32,
+  "proteinPer100g": 0.7,
+  "carbsPer100g": 7.7,
+  "fatPer100g": 0.3,
+  "servingGrams": 150,
+  "synonyms": [
+   "strawberry"
+  ]
+ },
+ {
+  "name": "Grapes",
+  "caloriesPer100g": 69,
+  "proteinPer100g": 0.7,
+  "carbsPer100g": 18.1,
+  "fatPer100g": 0.2,
+  "servingGrams": 150,
+  "synonyms": [
+   "grape"
+  ]
+ },
+ {
+  "name": "Watermelon",
+  "caloriesPer100g": 30,
+  "proteinPer100g": 0.6,
+  "carbsPer100g": 7.6,
+  "fatPer100g": 0.2,
+  "servingGrams": 280,
+  "synonyms": []
+ },
+ {
+  "name": "Mango",
+  "caloriesPer100g": 60,
+  "proteinPer100g": 0.8,
+  "carbsPer100g": 15.0,
+  "fatPer100g": 0.4,
+  "servingGrams": 165,
+  "synonyms": [
+   "mangoes"
+  ]
+ },
+ {
+  "name": "Pineapple",
+  "caloriesPer100g": 50,
+  "proteinPer100g": 0.5,
+  "carbsPer100g": 13.1,
+  "fatPer100g": 0.1,
+  "servingGrams": 165,
+  "synonyms": []
+ },
+ {
+  "name": "Avocado",
+  "caloriesPer100g": 160,
+  "proteinPer100g": 2.0,
+  "carbsPer100g": 8.5,
+  "fatPer100g": 14.7,
+  "servingGrams": 100,
+  "synonyms": [
+   "guacamole"
+  ]
+ },
+ {
+  "name": "Blueberries",
+  "caloriesPer100g": 57,
+  "proteinPer100g": 0.7,
+  "carbsPer100g": 14.5,
+  "fatPer100g": 0.3,
+  "servingGrams": 148,
+  "synonyms": [
+   "blueberry"
+  ]
+ },
+ {
+  "name": "Pizza",
+  "caloriesPer100g": 266,
+  "proteinPer100g": 11.0,
+  "carbsPer100g": 33.0,
+  "fatPer100g": 10.0,
+  "servingGrams": 125,
+  "synonyms": [
+   "pepperoni pizza",
+   "cheese pizza",
+   "pizza slice"
+  ]
+ },
+ {
+  "name": "Cheeseburger",
+  "caloriesPer100g": 263,
+  "proteinPer100g": 13.0,
+  "carbsPer100g": 24.0,
+  "fatPer100g": 12.5,
+  "servingGrams": 220,
+  "synonyms": [
+   "hamburger",
+   "burger"
+  ]
+ },
+ {
+  "name": "Hot Dog",
+  "caloriesPer100g": 290,
+  "proteinPer100g": 10.5,
+  "carbsPer100g": 24.0,
+  "fatPer100g": 17.0,
+  "servingGrams": 100,
+  "synonyms": [
+   "hotdog",
+   "corn dog"
+  ]
+ },
+ {
+  "name": "Sandwich",
+  "caloriesPer100g": 250,
+  "proteinPer100g": 11.0,
+  "carbsPer100g": 28.0,
+  "fatPer100g": 10.0,
+  "servingGrams": 180,
+  "synonyms": [
+   "sub",
+   "hoagie",
+   "blt"
+  ]
+ },
+ {
+  "name": "Burrito",
+  "caloriesPer100g": 206,
+  "proteinPer100g": 8.5,
+  "carbsPer100g": 26.0,
+  "fatPer100g": 7.5,
+  "servingGrams": 300,
+  "synonyms": [
+   "burritos",
+   "wrap"
+  ]
+ },
+ {
+  "name": "Taco",
+  "caloriesPer100g": 226,
+  "proteinPer100g": 9.5,
+  "carbsPer100g": 20.0,
+  "fatPer100g": 12.0,
+  "servingGrams": 100,
+  "synonyms": [
+   "tacos"
+  ]
+ },
+ {
+  "name": "French Fries",
+  "caloriesPer100g": 312,
+  "proteinPer100g": 3.4,
+  "carbsPer100g": 41.0,
+  "fatPer100g": 15.0,
+  "servingGrams": 117,
+  "synonyms": [
+   "fries",
+   "chips"
+  ]
+ },
+ {
+  "name": "Fried Chicken",
+  "caloriesPer100g": 246,
+  "proteinPer100g": 24.0,
+  "carbsPer100g": 8.0,
+  "fatPer100g": 13.0,
+  "servingGrams": 140,
+  "synonyms": [
+   "chicken wings",
+   "chicken nuggets",
+   "chicken tenders"
+  ]
+ },
+ {
+  "name": "Grilled Chicken",
+  "caloriesPer100g": 165,
+  "proteinPer100g": 31.0,
+  "carbsPer100g": 0.0,
+  "fatPer100g": 3.6,
+  "servingGrams": 120,
+  "synonyms": [
+   "chicken breast",
+   "chicken"
+  ]
+ },
+ {
+  "name": "Steak",
+  "caloriesPer100g": 271,
+  "proteinPer100g": 25.0,
+  "carbsPer100g": 0.0,
+  "fatPer100g": 19.0,
+  "servingGrams": 200,
+  "synonyms": [
+   "beef",
+   "ribeye",
+   "sirloin"
+  ]
+ },
+ {
+  "name": "Salmon",
+  "caloriesPer100g": 208,
+  "proteinPer100g": 20.0,
+  "carbsPer100g": 0.0,
+  "fatPer100g": 13.0,
+  "servingGrams": 150,
+  "synonyms": [
+   "fish",
+   "trout"
+  ]
+ },
+ {
+  "name": "Shrimp",
+  "caloriesPer100g": 99,
+  "proteinPer100g": 24.0,
+  "carbsPer100g": 0.2,
+  "fatPer100g": 0.3,
+  "servingGrams": 100,
+  "synonyms": [
+   "prawns",
+   "prawn"
+  ]
+ },
+ {
+  "name": "Sushi",
+  "caloriesPer100g": 150,
+  "proteinPer100g": 6.0,
+  "carbsPer100g": 26.0,
+  "fatPer100g": 2.0,
+  "servingGrams": 200,
+  "synonyms": [
+   "sushi roll",
+   "nigiri",
+   "maki"
+  ]
+ },
+ {
+  "name": "Eggs",
+  "caloriesPer100g": 155,
+  "proteinPer100g": 13.0,
+  "carbsPer100g": 1.1,
+  "fatPer100g": 11.0,
+  "servingGrams": 100,
+  "synonyms": [
+   "egg",
+   "fried egg",
+   "scrambled eggs",
+   "omelet",
+   "omelette",
+   "boiled egg"
+  ]
+ },
+ {
+  "name": "Bacon",
+  "caloriesPer100g": 541,
+  "proteinPer100g": 37.0,
+  "carbsPer100g": 1.4,
+  "fatPer100g": 42.0,
+  "servingGrams": 30,
+  "synonyms": []
+ },
+ {
+  "name": "Rice",
+  "caloriesPer100g": 130,
+  "proteinPer100g": 2.7,
+  "carbsPer100g": 28.0,
+  "fatPer100g": 0.3,
+  "servingGrams": 200,
+  "synonyms": [
+   "white rice",
+   "fried rice",
+   "brown rice"
+  ]
+ },
+ {
+  "name": "Pasta",
+  "caloriesPer100g": 158,
+  "proteinPer100g": 5.8,
+  "carbsPer100g": 31.0,
+  "fatPer100g": 0.9,
+  "servingGrams": 220,
+  "synonyms": [
+   "spaghetti",
+   "noodles",
+   "carbonara",
+   "macaroni",
+   "ramen",
+   "lasagna"
+  ]
+ },
+ {
+  "name": "Bread",
+  "caloriesPer100g": 265,
+  "proteinPer100g": 9.0,
+  "carbsPer100g": 49.0,
+  "fatPer100g": 3.2,
+  "servingGrams": 40,
+  "synonyms": [
+   "toast",
+   "baguette",
+   "bagel",
+   "bun",
+   "croissant"
+  ]
+ },
+ {
+  "name": "Potato",
+  "caloriesPer100g": 77,
+  "proteinPer100g": 2.0,
+  "carbsPer100g": 17.0,
+  "fatPer100g": 0.1,
+  "servingGrams": 170,
+  "synonyms": [
+   "baked potato",
+   "potatoes",
+   "mashed potato",
+   "mashed potatoes"
+  ]
+ },
+ {
+  "name": "Salad",
+  "caloriesPer100g": 33,
+  "proteinPer100g": 1.5,
+  "carbsPer100g": 4.5,
+  "fatPer100g": 1.0,
+  "servingGrams": 200,
+  "synonyms": [
+   "green salad",
+   "caesar salad",
+   "coleslaw",
+   "lettuce"
+  ]
+ },
+ {
+  "name": "Soup",
+  "caloriesPer100g": 62,
+  "proteinPer100g": 3.0,
+  "carbsPer100g": 8.0,
+  "fatPer100g": 2.0,
+  "servingGrams": 300,
+  "synonyms": [
+   "chicken soup",
+   "tomato soup",
+   "consomme",
+   "broth",
+   "chowder"
+  ]
+ },
+ {
+  "name": "Oatmeal",
+  "caloriesPer100g": 68,
+  "proteinPer100g": 2.4,
+  "carbsPer100g": 12.0,
+  "fatPer100g": 1.4,
+  "servingGrams": 240,
+  "synonyms": [
+   "porridge",
+   "oats",
+   "granola"
+  ]
+ },
+ {
+  "name": "Cereal",
+  "caloriesPer100g": 379,
+  "proteinPer100g": 7.0,
+  "carbsPer100g": 84.0,
+  "fatPer100g": 1.5,
+  "servingGrams": 40,
+  "synonyms": [
+   "cornflakes",
+   "corn flakes"
+  ]
+ },
+ {
+  "name": "Pancakes",
+  "caloriesPer100g": 227,
+  "proteinPer100g": 6.0,
+  "carbsPer100g": 28.0,
+  "fatPer100g": 10.0,
+  "servingGrams": 150,
+  "synonyms": [
+   "pancake",
+   "waffle",
+   "waffles",
+   "crepe",
+   "french toast"
+  ]
+ },
+ {
+  "name": "Yogurt",
+  "caloriesPer100g": 59,
+  "proteinPer100g": 10.0,
+  "carbsPer100g": 3.6,
+  "fatPer100g": 0.7,
+  "servingGrams": 170,
+  "synonyms": [
+   "greek yogurt",
+   "yoghurt"
+  ]
+ },
+ {
+  "name": "Cheese",
+  "caloriesPer100g": 402,
+  "proteinPer100g": 25.0,
+  "carbsPer100g": 1.3,
+  "fatPer100g": 33.0,
+  "servingGrams": 30,
+  "synonyms": [
+   "cheddar",
+   "mozzarella",
+   "parmesan"
+  ]
+ },
+ {
+  "name": "Milk",
+  "caloriesPer100g": 61,
+  "proteinPer100g": 3.2,
+  "carbsPer100g": 4.8,
+  "fatPer100g": 3.3,
+  "servingGrams": 244,
+  "synonyms": [
+   "glass of milk"
+  ]
+ },
+ {
+  "name": "Ice Cream",
+  "caloriesPer100g": 207,
+  "proteinPer100g": 3.5,
+  "carbsPer100g": 24.0,
+  "fatPer100g": 11.0,
+  "servingGrams": 66,
+  "synonyms": [
+   "gelato",
+   "sundae",
+   "frozen yogurt"
+  ]
+ },
+ {
+  "name": "Cake",
+  "caloriesPer100g": 371,
+  "proteinPer100g": 5.0,
+  "carbsPer100g": 53.0,
+  "fatPer100g": 15.0,
+  "servingGrams": 80,
+  "synonyms": [
+   "birthday cake",
+   "cupcake",
+   "cheesecake",
+   "brownie"
+  ]
+ },
+ {
+  "name": "Cookies",
+  "caloriesPer100g": 488,
+  "proteinPer100g": 5.5,
+  "carbsPer100g": 64.0,
+  "fatPer100g": 24.0,
+  "servingGrams": 30,
+  "synonyms": [
+   "cookie",
+   "biscuit",
+   "biscuits"
+  ]
+ },
+ {
+  "name": "Donut",
+  "caloriesPer100g": 452,
+  "proteinPer100g": 4.9,
+  "carbsPer100g": 51.0,
+  "fatPer100g": 25.0,
+  "servingGrams": 60,
+  "synonyms": [
+   "doughnut",
+   "donuts"
+  ]
+ },
+ {
+  "name": "Chocolate",
+  "caloriesPer100g": 546,
+  "proteinPer100g": 4.9,
+  "carbsPer100g": 61.0,
+  "fatPer100g": 31.0,
+  "servingGrams": 40,
+  "synonyms": [
+   "chocolate bar",
+   "candy bar",
+   "candy"
+  ]
+ },
+ {
+  "name": "Popcorn",
+  "caloriesPer100g": 375,
+  "proteinPer100g": 11.0,
+  "carbsPer100g": 74.0,
+  "fatPer100g": 4.3,
+  "servingGrams": 30,
+  "synonyms": []
+ },
+ {
+  "name": "Nuts",
+  "caloriesPer100g": 607,
+  "proteinPer100g": 20.0,
+  "carbsPer100g": 21.0,
+  "fatPer100g": 54.0,
+  "servingGrams": 30,
+  "synonyms": [
+   "almonds",
+   "peanuts",
+   "cashews",
+   "trail mix",
+   "walnuts"
+  ]
+ },
+ {
+  "name": "Peanut Butter",
+  "caloriesPer100g": 588,
+  "proteinPer100g": 25.0,
+  "carbsPer100g": 20.0,
+  "fatPer100g": 50.0,
+  "servingGrams": 32,
+  "synonyms": []
+ },
+ {
+  "name": "Protein Shake",
+  "caloriesPer100g": 60,
+  "proteinPer100g": 12.0,
+  "carbsPer100g": 2.0,
+  "fatPer100g": 0.5,
+  "servingGrams": 350,
+  "synonyms": [
+   "smoothie",
+   "milkshake",
+   "shake"
+  ]
+ },
+ {
+  "name": "Orange Juice",
+  "caloriesPer100g": 45,
+  "proteinPer100g": 0.7,
+  "carbsPer100g": 10.4,
+  "fatPer100g": 0.2,
+  "servingGrams": 248,
+  "synonyms": [
+   "juice",
+   "apple juice"
+  ]
+ },
+ {
+  "name": "Coffee",
+  "caloriesPer100g": 2,
+  "proteinPer100g": 0.1,
+  "carbsPer100g": 0.0,
+  "fatPer100g": 0.0,
+  "servingGrams": 240,
+  "synonyms": [
+   "espresso",
+   "latte",
+   "cappuccino"
+  ]
+ },
+ {
+  "name": "Broccoli",
+  "caloriesPer100g": 34,
+  "proteinPer100g": 2.8,
+  "carbsPer100g": 6.6,
+  "fatPer100g": 0.4,
+  "servingGrams": 90,
+  "synonyms": []
+ },
+ {
+  "name": "Carrots",
+  "caloriesPer100g": 41,
+  "proteinPer100g": 0.9,
+  "carbsPer100g": 9.6,
+  "fatPer100g": 0.2,
+  "servingGrams": 60,
+  "synonyms": [
+   "carrot"
+  ]
+ },
+ {
+  "name": "Corn",
+  "caloriesPer100g": 86,
+  "proteinPer100g": 3.3,
+  "carbsPer100g": 19.0,
+  "fatPer100g": 1.4,
+  "servingGrams": 90,
+  "synonyms": [
+   "corn on the cob",
+   "sweetcorn"
+  ]
+ },
+ {
+  "name": "Beans",
+  "caloriesPer100g": 127,
+  "proteinPer100g": 8.7,
+  "carbsPer100g": 22.8,
+  "fatPer100g": 0.5,
+  "servingGrams": 130,
+  "synonyms": [
+   "black beans",
+   "chili",
+   "lentils",
+   "hummus"
+  ]
+ },
+ {
+  "name": "Tofu",
+  "caloriesPer100g": 76,
+  "proteinPer100g": 8.0,
+  "carbsPer100g": 1.9,
+  "fatPer100g": 4.8,
+  "servingGrams": 120,
+  "synonyms": []
+ },
+ {
+  "name": "Quesadilla",
+  "caloriesPer100g": 300,
+  "proteinPer100g": 12.0,
+  "carbsPer100g": 27.0,
+  "fatPer100g": 16.0,
+  "servingGrams": 180,
+  "synonyms": []
+ },
+ {
+  "name": "Mac and Cheese",
+  "caloriesPer100g": 164,
+  "proteinPer100g": 6.5,
+  "carbsPer100g": 20.0,
+  "fatPer100g": 6.6,
+  "servingGrams": 220,
+  "synonyms": [
+   "macaroni and cheese"
+  ]
+ },
+ {
+  "name": "Curry",
+  "caloriesPer100g": 120,
+  "proteinPer100g": 7.0,
+  "carbsPer100g": 10.0,
+  "fatPer100g": 6.0,
+  "servingGrams": 300,
+  "synonyms": [
+   "chicken curry",
+   "tikka masala"
+  ]
+ },
+ {
+  "name": "Kebab",
+  "caloriesPer100g": 215,
+  "proteinPer100g": 18.0,
+  "carbsPer100g": 12.0,
+  "fatPer100g": 11.0,
+  "servingGrams": 200,
+  "synonyms": [
+   "gyro",
+   "shawarma",
+   "doner"
+  ]
+ },
+ {
+  "name": "Dumplings",
+  "caloriesPer100g": 190,
+  "proteinPer100g": 7.5,
+  "carbsPer100g": 26.0,
+  "fatPer100g": 6.0,
+  "servingGrams": 150,
+  "synonyms": [
+   "dumpling",
+   "gyoza",
+   "potsticker"
+  ]
+ },
+ {
+  "name": "Pretzel",
+  "caloriesPer100g": 338,
+  "proteinPer100g": 8.0,
+  "carbsPer100g": 71.0,
+  "fatPer100g": 2.5,
+  "servingGrams": 60,
+  "synonyms": [
+   "pretzels"
+  ]
+ },
+ {
+  "name": "Chips",
+  "caloriesPer100g": 536,
+  "proteinPer100g": 7.0,
+  "carbsPer100g": 53.0,
+  "fatPer100g": 34.0,
+  "servingGrams": 28,
+  "synonyms": [
+   "potato chips",
+   "crisps",
+   "nachos",
+   "tortilla chips"
+  ]
+ }
+]

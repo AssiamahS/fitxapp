@@ -1,4 +1,5 @@
 import SwiftUI
+import WatchKit
 
 struct WatchExerciseView: View {
     @Binding var wex: WorkoutExercise
@@ -6,18 +7,32 @@ struct WatchExerciseView: View {
 
     var body: some View {
         List {
+            // Same demo frames as the phone — tap a move, see how it's done.
+            if ExerciseInfo.hasMedia(for: wex.exercise.id) {
+                ExerciseMediaView(exerciseID: wex.exercise.id)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 80)
+                    .listRowBackground(Color.clear)
+            }
+
+            let previous = store.lastSets(for: wex.exercise.id)
+            if !previous.isEmpty {
+                Text("Last: " + previous.map { summary($0) }.joined(separator: ", "))
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
             ForEach($wex.sets) { $set in
                 NavigationLink {
                     WatchSetEditor(set: $set, usesWeight: wex.exercise.usesWeight) {
-                        store.restTimer.start(seconds: AppConfig.defaultRestSeconds)
+                        store.restTimer.start(seconds: store.settings.restSeconds)
+                        RestHaptics.schedule(for: store.restTimer)
                     }
                 } label: {
                     HStack {
                         Text("Set \((wex.sets.firstIndex(where: { $0.id == set.id }) ?? 0) + 1)")
                         Spacer()
-                        Text(wex.exercise.usesWeight
-                             ? "\(Stats.formattedWeight(set.weight))×\(set.reps)"
-                             : "\(set.reps)")
+                        Text(summary(set))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                         Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle")
@@ -39,41 +54,66 @@ struct WatchExerciseView: View {
         }
         .navigationTitle(wex.exercise.name)
     }
+
+    private func summary(_ set: WorkoutSet) -> String {
+        wex.exercise.usesWeight
+            ? "\(Stats.formattedWeight(set.weight, unit: store.settings.weightUnit))×\(set.reps)"
+            : "\(set.reps)"
+    }
 }
 
 struct WatchSetEditor: View {
     @Binding var set: WorkoutSet
     let usesWeight: Bool
     var onCompleted: () -> Void
+    @Environment(WorkoutStore.self) private var store
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 10) {
-                if usesWeight {
-                    Stepper(value: $set.weight, in: 0...500, step: 2.5) {
-                        Text(Stats.formattedWeight(set.weight))
-                            .font(.headline)
-                    }
-                }
-
-                Stepper(value: $set.reps, in: 0...100, step: 1) {
-                    Text("\(set.reps) reps")
+        VStack(spacing: 8) {
+            if usesWeight {
+                let unit = store.settings.weightUnit
+                Stepper(value: weightBinding, in: 0...1000, step: unit == .kg ? 2.5 : 5) {
+                    Text(Stats.formattedWeight(set.weight, unit: unit))
                         .font(.headline)
                 }
-
-                Button {
-                    set.isCompleted = true
-                    onCompleted()
-                    dismiss()
-                } label: {
-                    Label("Log Set", systemImage: "checkmark")
-                }
-                .tint(.green)
             }
-            .padding(.horizontal, 4)
+
+            Stepper(value: $set.reps, in: 0...100, step: 1) {
+                Text("\(set.reps) reps")
+                    .font(.headline)
+            }
+
+            Button {
+                set.isCompleted = true
+                WKInterfaceDevice.current().play(.success)
+                onCompleted()
+                dismiss()
+            } label: {
+                Label("Log Set", systemImage: "checkmark")
+            }
+            .tint(.green)
         }
+        .padding(.horizontal, 4)
+        // Dial the weight with the crown — 2.5 kg / 5 lb per click.
+        .focusable(usesWeight)
+        .digitalCrownRotation(weightBinding,
+                              from: 0,
+                              through: 1000,
+                              by: store.settings.weightUnit == .kg ? 2.5 : 5,
+                              sensitivity: .medium,
+                              isContinuous: false,
+                              isHapticFeedbackEnabled: true)
         .navigationTitle("Set")
+    }
+
+    /// Steps in display units, stores kilograms.
+    private var weightBinding: Binding<Double> {
+        let unit = store.settings.weightUnit
+        return Binding(
+            get: { unit.fromKg(set.weight) },
+            set: { set.weight = unit.toKg($0) }
+        )
     }
 }
 

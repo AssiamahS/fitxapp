@@ -8,12 +8,19 @@ final class WorkoutStore {
         var templates: [WorkoutTemplate] = []
         var customExercises: [Exercise] = []
         var activeWorkout: Workout? = nil
+        // v2 additions — optional so v1 store files still decode.
+        var settings: UserSettings? = nil
+        var bodyWeights: [BodyWeightEntry]? = nil
     }
 
     private(set) var history: [Workout] = []
     private(set) var templates: [WorkoutTemplate] = []
     private(set) var customExercises: [Exercise] = []
+    private(set) var settings = UserSettings()
+    private(set) var bodyWeights: [BodyWeightEntry] = []
     var activeWorkout: Workout?
+    /// Live ticker from a running watch session. Phone-side only, never persisted.
+    var watchMetrics: WatchLiveMetrics?
     let restTimer = RestTimer()
 
     private let fileURL: URL
@@ -58,13 +65,38 @@ final class WorkoutStore {
         return workout
     }
 
+    /// Start a new workout mirroring a past one — same exercises, same targets,
+    /// nothing marked done yet.
+    @discardableResult
+    func repeatWorkout(_ past: Workout) -> Workout {
+        var workout = Workout(title: past.title)
+        workout.exercises = past.exercises.map { wex in
+            WorkoutExercise(exercise: wex.exercise,
+                            sets: wex.sets.map { set in
+                                var copy = set
+                                copy.id = UUID()
+                                copy.isCompleted = false
+                                return copy
+                            })
+        }
+        activeWorkout = workout
+        save()
+        return workout
+    }
+
     /// Discards incomplete sets (and exercises left with none), stamps the end
     /// date and moves the workout into history. Returns nil — and saves nothing —
     /// when no set was completed at all.
     @discardableResult
-    func finishActiveWorkout(at endDate: Date = Date()) -> Workout? {
+    func finishActiveWorkout(at endDate: Date = Date(),
+                             avgHeartRate: Double? = nil,
+                             maxHeartRate: Double? = nil,
+                             activeCalories: Double? = nil) -> Workout? {
         guard var workout = activeWorkout else { return nil }
         workout.endDate = endDate
+        if let avgHeartRate, avgHeartRate > 0 { workout.avgHeartRate = avgHeartRate }
+        if let maxHeartRate, maxHeartRate > 0 { workout.maxHeartRate = maxHeartRate }
+        if let activeCalories, activeCalories > 0 { workout.activeCalories = activeCalories }
         workout.exercises = workout.exercises.map { wex in
             var wex = wex
             wex.sets.removeAll { !$0.isCompleted }
@@ -121,6 +153,13 @@ final class WorkoutStore {
         return []
     }
 
+    /// The set at the same position last time — Hevy's "previous" column.
+    func previousSet(for exerciseID: String, at index: Int) -> WorkoutSet? {
+        let last = lastSets(for: exerciseID)
+        guard last.indices.contains(index) else { return last.last }
+        return last[index]
+    }
+
     func bestOneRepMax(for exerciseID: String) -> Double {
         var best = 0.0
         for workout in history {
@@ -138,12 +177,14 @@ final class WorkoutStore {
     func addTemplate(_ template: WorkoutTemplate) {
         templates.append(template)
         save()
+        syncTemplatesToWatch()
     }
 
     func updateTemplate(_ template: WorkoutTemplate) {
         guard let index = templates.firstIndex(where: { $0.id == template.id }) else { return }
         templates[index] = template
         save()
+        syncTemplatesToWatch()
     }
 
     func deleteTemplates(at offsets: IndexSet) {
@@ -151,6 +192,22 @@ final class WorkoutStore {
             templates.remove(at: index)
         }
         save()
+        syncTemplatesToWatch()
+    }
+
+    /// Watch side: adopt the routines the phone pushed over.
+    func replaceTemplates(_ templates: [WorkoutTemplate], customExercises: [Exercise]) {
+        self.templates = templates
+        for exercise in customExercises where !self.customExercises.contains(where: { $0.id == exercise.id }) {
+            self.customExercises.append(exercise)
+        }
+        save()
+    }
+
+    func syncTemplatesToWatch() {
+        #if os(iOS) && canImport(WatchConnectivity)
+        Connectivity.shared.pushTemplates(templates, customExercises: customExercises)
+        #endif
     }
 
     // MARK: - Exercises
@@ -168,8 +225,33 @@ final class WorkoutStore {
                                 isCustom: true)
         customExercises.append(exercise)
         save()
+        syncTemplatesToWatch()
         return exercise
     }
+
+    // MARK: - Settings
+
+    func updateSettings(_ settings: UserSettings) {
+        self.settings = settings
+        save()
+    }
+
+    // MARK: - Body weight
+
+    func logBodyWeight(_ kg: Double, on date: Date = Date()) {
+        bodyWeights.append(BodyWeightEntry(date: date, weightKg: kg))
+        bodyWeights.sort { $0.date < $1.date }
+        save()
+    }
+
+    func deleteBodyWeights(at offsets: IndexSet) {
+        for index in offsets.sorted(by: >) where bodyWeights.indices.contains(index) {
+            bodyWeights.remove(at: index)
+        }
+        save()
+    }
+
+    var latestBodyWeight: BodyWeightEntry? { bodyWeights.last }
 
     static func defaultTitle(for date: Date = Date()) -> String {
         switch Calendar.current.component(.hour, from: date) {
@@ -186,7 +268,9 @@ final class WorkoutStore {
         let state = State(history: history,
                           templates: templates,
                           customExercises: customExercises,
-                          activeWorkout: activeWorkout)
+                          activeWorkout: activeWorkout,
+                          settings: settings,
+                          bodyWeights: bodyWeights)
         do {
             let encoder = JSONEncoder()
             encoder.dateEncodingStrategy = .iso8601
@@ -206,5 +290,7 @@ final class WorkoutStore {
         templates = state.templates
         customExercises = state.customExercises
         activeWorkout = state.activeWorkout
+        settings = state.settings ?? UserSettings()
+        bodyWeights = state.bodyWeights ?? []
     }
 }

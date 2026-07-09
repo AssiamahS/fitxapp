@@ -22,6 +22,14 @@
 	<string>1</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>FitX uses the camera to scan barcodes and detect foods so you can log macros fast.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>FitX reads your steps and active energy to show daily activity next to your macros.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>FitX saves your strength workouts to Apple Health.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UISupportedInterfaceOrientations</key>
