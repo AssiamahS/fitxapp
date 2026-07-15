@@ -26,10 +26,23 @@ jobs:
       - name: Run unit tests on iPhone simulator
         run: |
           set -o pipefail
+          pick_sim() {
+            xcrun simctl list devices available --json \
+              | jq -r '[.devices[] | .[] | select(.isAvailable and (.name | test("^iPhone")))] | first | .udid // empty'
+          }
+          UDID=$(pick_sim)
+          if [ -z "$UDID" ]; then
+            echo "no iPhone simulator on image — installing iOS platform"
+            sudo xcodebuild -runFirstLaunch
+            xcodebuild -downloadPlatform iOS
+            UDID=$(pick_sim)
+          fi
+          test -n "$UDID"
+          echo "using simulator $UDID"
           xcodebuild test \
             -project FitX.xcodeproj \
             -scheme FitX \
-            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -destination "platform=iOS Simulator,id=$UDID" \
             CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
 
       - name: Build watch app standalone
