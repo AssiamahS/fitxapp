@@ -117,9 +117,13 @@ jobs:
         if: steps.creds.outputs.have == 'true'
         env:
           ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
         run: |
-          mkdir -p "$RUNNER_TEMP/asc"
+          mkdir -p "$RUNNER_TEMP/asc" "$HOME/private_keys"
           printf '%s' "$ASC_KEY_P8" | base64 --decode > "$RUNNER_TEMP/asc/AuthKey.p8"
+          # xcodebuild's upload phase ignores -authenticationKeyPath and only
+          # searches the standard private_keys directories
+          cp "$RUNNER_TEMP/asc/AuthKey.p8" "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
 
       - name: Install XcodeGen
         if: steps.creds.outputs.have == 'true'
