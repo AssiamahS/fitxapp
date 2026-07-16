@@ -19,10 +19,15 @@ enum WeightUnit: String, Codable, CaseIterable, Identifiable {
     func toKg(_ value: Double) -> Double {
         self == .kg ? value : value / Self.lbPerKg
     }
+
+    /// Pounds for US-region users, kilograms everywhere else.
+    static var defaultForLocale: WeightUnit {
+        Locale.current.measurementSystem == .us ? .lb : .kg
+    }
 }
 
 struct UserSettings: Codable, Hashable {
-    var weightUnit: WeightUnit = .kg
+    var weightUnit: WeightUnit = .defaultForLocale
     var restSeconds: TimeInterval = AppConfig.defaultRestSeconds
 }
 
