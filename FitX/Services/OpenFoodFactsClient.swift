@@ -21,17 +21,30 @@ enum OpenFoodFactsClient {
 
     private static let fields = "code,product_name,brands,nutriments,serving_size"
 
+    // OpenFoodFacts blocks/throttles default CFNetwork agents; they require
+    // an identifying User-Agent from API consumers.
+    private static let userAgent = "FitX/2.0 (https://github.com/AssiamahS/fitxapp)"
+
+    // Country subdomain scopes text search to locally sold products, which
+    // keeps generic terms ("pizza") from returning far-market results.
+    private static var searchHost: String {
+        Locale.current.region?.identifier == "US" ? "us.openfoodfacts.org" : "world.openfoodfacts.org"
+    }
+
     static func search(_ query: String) async throws -> [OFFProduct] {
-        var components = URLComponents(string: "https://world.openfoodfacts.org/cgi/search.pl")!
+        var components = URLComponents(string: "https://\(searchHost)/cgi/search.pl")!
         components.queryItems = [
             URLQueryItem(name: "search_terms", value: query),
             URLQueryItem(name: "search_simple", value: "1"),
             URLQueryItem(name: "action", value: "process"),
             URLQueryItem(name: "json", value: "1"),
             URLQueryItem(name: "page_size", value: "25"),
+            URLQueryItem(name: "sort_by", value: "unique_scans_n"),
             URLQueryItem(name: "fields", value: fields),
         ]
-        let (data, response) = try await URLSession.shared.data(from: components.url!)
+        var request = URLRequest(url: components.url!)
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard (response as? HTTPURLResponse)?.statusCode == 200,
               let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
               let products = json["products"] as? [[String: Any]] else {
@@ -46,7 +59,9 @@ enum OpenFoodFactsClient {
               let url = URL(string: "https://world.openfoodfacts.org/api/v2/product/\(sanitized).json?fields=\(fields)") else {
             return nil
         }
-        let (data, response) = try await URLSession.shared.data(from: url)
+        var request = URLRequest(url: url)
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        let (data, response) = try await URLSession.shared.data(for: request)
         guard (response as? HTTPURLResponse)?.statusCode == 200,
               let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
               let raw = json["product"] as? [String: Any] else {

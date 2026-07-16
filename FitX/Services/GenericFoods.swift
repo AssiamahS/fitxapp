@@ -14,6 +14,20 @@ struct GenericFood: Decodable, Identifiable, Hashable {
     var id: String { name }
 }
 
+extension OFFProduct {
+    /// Present a generic-table food through the same serving flow as a product hit.
+    init(generic food: GenericFood) {
+        self.init(code: "generic-\(food.name)",
+                  name: food.name,
+                  brand: "Typical values",
+                  caloriesPer100g: food.caloriesPer100g,
+                  proteinPer100g: food.proteinPer100g,
+                  carbsPer100g: food.carbsPer100g,
+                  fatPer100g: food.fatPer100g,
+                  servingSize: "\(Int(food.servingGrams)) g")
+    }
+}
+
 enum GenericFoods {
     static let all: [GenericFood] = {
         guard let url = Bundle.main.url(forResource: "generic-foods", withExtension: "json"),
@@ -23,6 +37,22 @@ enum GenericFoods {
         }
         return decoded
     }()
+
+    /// Ranked text search for the food search tab: exact > prefix > contains.
+    static func search(_ query: String) -> [GenericFood] {
+        let needle = query.lowercased().trimmingCharacters(in: .whitespaces)
+        guard needle.count >= 2 else { return [] }
+        func rank(_ food: GenericFood) -> Int? {
+            let names = [food.name.lowercased()] + food.synonyms
+            if names.contains(needle) { return 0 }
+            if names.contains(where: { $0.hasPrefix(needle) }) { return 1 }
+            if names.contains(where: { $0.contains(needle) }) { return 2 }
+            return nil
+        }
+        return all.compactMap { food in rank(food).map { (food, $0) } }
+            .sorted { $0.1 < $1.1 }
+            .map(\.0)
+    }
 
     /// Match a Vision classification identifier (e.g. "cheeseburger", "banana")
     /// against the table.

@@ -16,8 +16,10 @@ struct AddFoodView: View {
     @State private var tab: Tab = .search
     @State private var query = ""
     @State private var results: [OFFProduct] = []
+    @State private var genericHits: [GenericFood] = []
     @State private var searching = false
     @State private var searchError: String?
+    @State private var searchTask: Task<Void, Never>?
     @State private var servingProduct: OFFProduct?
     @State private var showingScanner = false
 
@@ -96,25 +98,18 @@ struct AddFoodView: View {
                     .foregroundStyle(.secondary)
             }
 
-            ForEach(results) { product in
-                Button {
-                    servingProduct = product
-                } label: {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(product.name)
-                            .foregroundStyle(.primary)
-                            .lineLimit(1)
-                        HStack {
-                            if !product.brand.isEmpty {
-                                Text(product.brand)
-                                    .lineLimit(1)
-                            }
-                            Spacer()
-                            Text("\(Int(product.caloriesPer100g)) kcal / 100 g")
-                                .monospacedDigit()
-                        }
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+            if !genericHits.isEmpty {
+                Section("Common foods") {
+                    ForEach(genericHits) { food in
+                        productRow(OFFProduct(generic: food))
+                    }
+                }
+            }
+
+            if !results.isEmpty {
+                Section(genericHits.isEmpty ? "" : "Products") {
+                    ForEach(results) { product in
+                        productRow(product)
                     }
                 }
             }
@@ -122,21 +117,51 @@ struct AddFoodView: View {
         .listStyle(.plain)
     }
 
+    private func productRow(_ product: OFFProduct) -> some View {
+        Button {
+            servingProduct = product
+        } label: {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(product.name)
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                HStack {
+                    if !product.brand.isEmpty {
+                        Text(product.brand)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                    Text("\(Int(product.caloriesPer100g)) kcal / 100 g")
+                        .monospacedDigit()
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+        }
+    }
+
     private func runSearch() {
         let term = query.trimmingCharacters(in: .whitespaces)
         guard !term.isEmpty else { return }
+        searchTask?.cancel()
         searching = true
         searchError = nil
         results = []
-        Task {
+        // The curated table answers instantly and offline; products fill in below.
+        genericHits = GenericFoods.search(term)
+        searchTask = Task {
             do {
                 let found = try await OpenFoodFactsClient.search(term)
+                guard !Task.isCancelled else { return }
                 results = found
-                if found.isEmpty {
+                if found.isEmpty && genericHits.isEmpty {
                     searchError = "Nothing found — try the Quick Add tab."
                 }
             } catch {
-                searchError = "Search failed. Check your connection and try again."
+                guard !Task.isCancelled else { return }
+                if genericHits.isEmpty {
+                    searchError = "Search failed. Check your connection and try again."
+                }
             }
             searching = false
         }
