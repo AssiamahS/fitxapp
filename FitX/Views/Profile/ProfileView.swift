@@ -25,6 +25,11 @@ struct ProfileView: View {
                     .listRowBackground(Color.clear)
                 }
 
+                Section("Muscle heat — last 7 days") {
+                    MuscleHeatmapView(counts: Insights.muscleSetCounts(history: store.history))
+                        .padding(.vertical, 4)
+                }
+
                 if weeklyBuckets.contains(where: { $0.count > 0 }) {
                     Section("Workouts per week") {
                         Chart(weeklyBuckets, id: \.weekStart) { bucket in
@@ -93,7 +98,8 @@ struct ProfileView: View {
                 settingsSection
 
                 Section {
-                    LabeledContent("Version", value: "2.0.0")
+                    LabeledContent("Version",
+                                   value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—")
                         .font(.caption)
                 }
             }

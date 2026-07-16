@@ -247,6 +247,26 @@ final class FitXV2Tests: XCTestCase {
         XCTAssertTrue(store.templates.isEmpty)
     }
 
+    // MARK: - Muscle heatmap
+
+    func testMuscleSetCountsWindowAndWarmups() {
+        let squat = ExerciseLibrary.exercise(named: "Squat")
+        var recent = workout(daysAgo: 2, exercise: bench, sets: [(80, 5), (80, 5)])
+        // Warm-ups must not count toward heat.
+        recent.exercises[0].sets.append(WorkoutSet(type: .warmup, weight: 40, reps: 10, isCompleted: true))
+        let history = [
+            recent,
+            workout(daysAgo: 3, exercise: squat, sets: [(100, 5)]),
+            workout(daysAgo: 30, exercise: squat, sets: [(100, 5), (100, 5)]),
+        ]
+
+        let counts = Insights.muscleSetCounts(history: history, days: 7)
+
+        XCTAssertEqual(counts[bench.muscleGroup], 2)
+        XCTAssertEqual(counts[squat.muscleGroup], 1)
+        XCTAssertEqual(counts.values.reduce(0, +), 3)
+    }
+
     // MARK: - Units
 
     func testWeightUnitConversionRoundTrips() {

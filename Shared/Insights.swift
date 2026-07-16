@@ -174,6 +174,22 @@ enum Insights {
         return result
     }
 
+    /// Completed working sets (warm-ups excluded) per muscle group over the
+    /// trailing `days`. Feeds the body heatmap.
+    static func muscleSetCounts(history: [Workout], days: Int = 7, asOf now: Date = Date()) -> [MuscleGroup: Int] {
+        guard let cutoff = Calendar.current.date(byAdding: .day, value: -days, to: now) else { return [:] }
+        var counts: [MuscleGroup: Int] = [:]
+        for workout in history where workout.startDate >= cutoff {
+            for wex in workout.exercises {
+                let working = wex.sets.filter { $0.isCompleted && $0.type != .warmup }.count
+                if working > 0 {
+                    counts[wex.exercise.muscleGroup, default: 0] += working
+                }
+            }
+        }
+        return counts
+    }
+
     // MARK: - Streak
 
     /// Consecutive calendar weeks with at least one workout, counting back from
