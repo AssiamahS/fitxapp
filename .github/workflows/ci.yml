@@ -132,7 +132,12 @@ jobs:
 
       - name: Generate Xcode project
         if: steps.creds.outputs.have == 'true'
-        run: xcodegen generate
+        run: |
+          # xcodegen writes CFBundleVersion literally into the generated plists,
+          # so the run number has to land in project.yml before generation —
+          # the CURRENT_PROJECT_VERSION override on the archive line never reaches them
+          sed -i '' "s/^    CURRENT_PROJECT_VERSION: .*/    CURRENT_PROJECT_VERSION: $GITHUB_RUN_NUMBER/" project.yml
+          xcodegen generate
 
       - name: Archive (cloud-managed signing)
         if: steps.creds.outputs.have == 'true'
