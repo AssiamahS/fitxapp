@@ -21,21 +21,28 @@ struct MuscleHeatmapView: View {
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.vertical, 8)
             }
-            HStack(spacing: 28) {
-                VStack(spacing: 4) {
-                    BodyDiagram(side: .front, intensity: intensity(_:))
-                    Text("Front")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
+            if Muscle3DBodyView.isAvailable {
+                Muscle3DBodyView(intensity: intensity(_:))
+                Text("Drag to spin · pinch to zoom")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            } else {
+                HStack(spacing: 28) {
+                    VStack(spacing: 4) {
+                        BodyDiagram(side: .front, intensity: intensity(_:))
+                        Text("Front")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
+                    VStack(spacing: 4) {
+                        BodyDiagram(side: .back, intensity: intensity(_:))
+                        Text("Back")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                    }
                 }
-                VStack(spacing: 4) {
-                    BodyDiagram(side: .back, intensity: intensity(_:))
-                    Text("Back")
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                }
+                .frame(maxWidth: .infinity)
             }
-            .frame(maxWidth: .infinity)
             legend
         }
     }

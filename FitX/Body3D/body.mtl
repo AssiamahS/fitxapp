@@ -1,0 +1,24 @@
+newmtl skin
+Kd 0.82 0.80 0.78
+newmtl muscle_back
+Kd 0.72 0.70 0.68
+newmtl muscle_biceps
+Kd 0.72 0.70 0.68
+newmtl muscle_calves
+Kd 0.72 0.70 0.68
+newmtl muscle_chest
+Kd 0.72 0.70 0.68
+newmtl muscle_core
+Kd 0.72 0.70 0.68
+newmtl muscle_forearms
+Kd 0.72 0.70 0.68
+newmtl muscle_glutes
+Kd 0.72 0.70 0.68
+newmtl muscle_hamstrings
+Kd 0.72 0.70 0.68
+newmtl muscle_quads
+Kd 0.72 0.70 0.68
+newmtl muscle_shoulders
+Kd 0.72 0.70 0.68
+newmtl muscle_triceps
+Kd 0.72 0.70 0.68
