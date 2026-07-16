@@ -240,7 +240,8 @@ final class FitXV2Tests: XCTestCase {
         XCTAssertEqual(store.history[0].title, "Legacy")
         XCTAssertEqual(store.history[0].exercises[0].sets[0].weight, 60)
         XCTAssertNil(store.history[0].avgHeartRate)
-        XCTAssertEqual(store.settings.weightUnit, .kg)
+        // v1 files carry no settings, so the unit falls back to the locale default.
+        XCTAssertEqual(store.settings.weightUnit, .defaultForLocale)
         XCTAssertTrue(store.bodyWeights.isEmpty)
         // v1 file existed, so starter templates must NOT be re-seeded over it.
         XCTAssertTrue(store.templates.isEmpty)
