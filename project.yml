@@ -9,7 +9,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "5.9"
-    MARKETING_VERSION: 2.0.10
+    MARKETING_VERSION: 2.0.11
     CURRENT_PROJECT_VERSION: 1
     DEVELOPMENT_TEAM: QGMAWHX827
     CODE_SIGN_STYLE: Automatic
@@ -31,6 +31,8 @@ targets:
     info:
       path: FitX/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDisplayName: FitX
         CFBundleIconName: AppIcon
         UILaunchScreen: {}
@@ -61,6 +63,8 @@ targets:
     info:
       path: FitXWatch/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDisplayName: FitX
         CFBundleIconName: AppIcon
         WKApplication: true
@@ -83,6 +87,8 @@ targets:
     info:
       path: FitXWidgets/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         CFBundleDisplayName: FitX
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
