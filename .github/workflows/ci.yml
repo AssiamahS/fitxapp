@@ -126,6 +126,28 @@ jobs:
           # searches the standard private_keys directories
           cp "$RUNNER_TEMP/asc/AuthKey.p8" "$HOME/private_keys/AuthKey_${ASC_KEY_ID}.p8"
 
+      - name: Import CI signing certificate
+        if: steps.creds.outputs.have == 'true'
+        env:
+          DEV_CERT_P12: ${{ secrets.DEV_CERT_P12 }}
+          DEV_CERT_PASSWORD: ${{ secrets.DEV_CERT_PASSWORD }}
+        run: |
+          # one persistent dev identity — without it, cloud signing mints a new
+          # "Created via API" cert every run and trips the account cert cap
+          if [ -z "$DEV_CERT_P12" ]; then
+            echo "::notice::DEV_CERT_P12 not set — cloud signing will mint a throwaway cert"
+            exit 0
+          fi
+          KEYCHAIN="$RUNNER_TEMP/ci.keychain-db"
+          security create-keychain -p ci "$KEYCHAIN"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN"
+          security unlock-keychain -p ci "$KEYCHAIN"
+          printf '%s' "$DEV_CERT_P12" | base64 --decode > "$RUNNER_TEMP/dev.p12"
+          security import "$RUNNER_TEMP/dev.p12" -k "$KEYCHAIN" -P "$DEV_CERT_PASSWORD" -A -t cert -f pkcs12
+          security set-key-partition-list -S apple-tool:,apple: -k ci "$KEYCHAIN" >/dev/null
+          security list-keychains -d user -s "$KEYCHAIN" login.keychain-db
+          security default-keychain -s "$KEYCHAIN"
+
       - name: Install XcodeGen
         if: steps.creds.outputs.have == 'true'
         run: brew install xcodegen
