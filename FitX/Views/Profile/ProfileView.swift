@@ -3,6 +3,7 @@ import Charts
 
 struct ProfileView: View {
     @Environment(WorkoutStore.self) private var store
+    @Environment(NutritionStore.self) private var nutrition
     @State private var showingWeightEntry = false
 
     var body: some View {
@@ -23,6 +24,25 @@ struct ProfileView: View {
                     }
                     .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                     .listRowBackground(Color.clear)
+                }
+
+                Section {
+                    NavigationLink {
+                        TrendsView()
+                    } label: {
+                        Label {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Trends & Predictions")
+                                    .font(.subheadline.bold())
+                                Text(trendsTeaser)
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        } icon: {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .foregroundStyle(.orange)
+                        }
+                    }
                 }
 
                 Section("Muscle heat — last 7 days") {
@@ -109,6 +129,16 @@ struct ProfileView: View {
                     .presentationDetents([.height(220)])
             }
         }
+    }
+
+    /// First verdict as the teaser line, or the pitch until data exists.
+    private var trendsTeaser: String {
+        let verdicts = EnergyModel.verdicts(history: store.history,
+                                            entries: nutrition.entries,
+                                            weights: store.bodyWeights,
+                                            unit: store.settings.weightUnit)
+        return verdicts.first?.title
+            ?? "Your burn, weight prediction and strength trend"
     }
 
     private var settingsSection: some View {

@@ -20,10 +20,9 @@ enum WeightUnit: String, Codable, CaseIterable, Identifiable {
         self == .kg ? value : value / Self.lbPerKg
     }
 
-    /// Pounds for US-region users, kilograms everywhere else.
-    static var defaultForLocale: WeightUnit {
-        Locale.current.measurementSystem == .us ? .lb : .kg
-    }
+    /// Pounds, everywhere. The unit picker in Profile is the escape hatch for
+    /// metric lifters — but out of the box the app talks lb.
+    static var defaultForLocale: WeightUnit { .lb }
 }
 
 struct UserSettings: Codable, Hashable {

@@ -6,6 +6,7 @@ struct AddFoodView: View {
 
     enum Tab: String, CaseIterable, Identifiable {
         case search = "Search"
+        case describe = "Describe"
         case quick = "Quick Add"
         case recent = "Recent"
         var id: String { rawValue }
@@ -37,6 +38,7 @@ struct AddFoodView: View {
 
                 switch tab {
                 case .search: searchTab
+                case .describe: DescribeMealView(day: day, meal: meal) { dismiss() }
                 case .quick: QuickAddForm(day: day, meal: meal)
                 case .recent: recentTab
                 }
