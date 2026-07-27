@@ -117,6 +117,16 @@ struct WorkoutFormView: View {
 
                     SetColumnHeader(exercise: wex.exercise, unit: store.settings.weightUnit)
 
+                    if let suggestion = SetSuggestion.make(for: wex.exercise, store: store) {
+                        SuggestionChip(suggestion: suggestion, unit: store.settings.weightUnit) {
+                            guard let index = wex.sets.firstIndex(where: { !$0.isCompleted }) else { return }
+                            if let weight = suggestion.weightKg {
+                                $wex.wrappedValue.sets[index].weight = weight
+                            }
+                            $wex.wrappedValue.sets[index].reps = suggestion.suggestedReps
+                        }
+                    }
+
                     ForEach($wex.sets) { $set in
                         // Only normal sets get numbers — W/F/D rows show their
                         // marker, so "W, 1, 2" instead of "W, 2, 3".
@@ -197,6 +207,62 @@ struct ExerciseHeaderRow: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
+    }
+}
+
+/// Tap-to-fill target for the next set: last session's top weight plus the
+/// rep range that fits the movement — heavy compounds live at 8–12, smaller
+/// isolation work at 12–15.
+struct SetSuggestion {
+    let weightKg: Double?
+    let repRange: ClosedRange<Int>
+
+    var suggestedReps: Int { (repRange.lowerBound + repRange.upperBound) / 2 }
+
+    static let heavyGroups: Set<MuscleGroup> = [.chest, .back, .quads, .hamstrings, .glutes, .fullBody]
+
+    static func make(for exercise: Exercise, store: WorkoutStore) -> SetSuggestion? {
+        guard !exercise.isCardio else { return nil }
+        let range = heavyGroups.contains(exercise.muscleGroup) ? 8...12 : 12...15
+        var weight: Double?
+        if exercise.usesWeight {
+            let top = store.lastSets(for: exercise.id)
+                .filter { $0.type != .warmup }
+                .map(\.weight)
+                .max()
+            if let top, top > 0 { weight = top }
+        }
+        return SetSuggestion(weightKg: weight, repRange: range)
+    }
+}
+
+struct SuggestionChip: View {
+    let suggestion: SetSuggestion
+    let unit: WeightUnit
+    var onApply: () -> Void
+
+    var body: some View {
+        Button(action: onApply) {
+            HStack(spacing: 6) {
+                Image(systemName: "wand.and.stars")
+                    .font(.caption)
+                Text(label)
+                    .font(.caption.bold())
+                Text("tap to fill")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Spacer(minLength: 0)
+            }
+            .foregroundStyle(.blue)
+            .padding(.vertical, 2)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var label: String {
+        let reps = "\(suggestion.repRange.lowerBound)–\(suggestion.repRange.upperBound) reps"
+        guard let weight = suggestion.weightKg else { return reps }
+        return "\(Stats.formattedWeight(weight, unit: unit)) \(unit.suffix) × \(reps)"
     }
 }
 
@@ -290,13 +356,17 @@ struct SetRow: View {
             }
 
             Button {
-                set.isCompleted.toggle()
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.55)) {
+                    set.isCompleted.toggle()
+                }
                 if set.isCompleted { onCompleted() }
             } label: {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: set.isCompleted ? "checkmark.circle.fill" : "circle")
                         .font(.title3)
                         .foregroundStyle(set.isCompleted ? Color.green : Color.secondary)
+                        .symbolEffect(.bounce, value: set.isCompleted)
+                        .scaleEffect(set.isCompleted ? 1.15 : 1)
                     if isPR {
                         Image(systemName: "flame.fill")
                             .font(.system(size: 9))
@@ -307,6 +377,7 @@ struct SetRow: View {
             }
             .buttonStyle(.plain)
             .frame(width: 28)
+            .sensoryFeedback(.success, trigger: set.isCompleted) { _, completed in completed }
         }
     }
 

@@ -5,6 +5,7 @@ struct ProfileView: View {
     @Environment(WorkoutStore.self) private var store
     @Environment(NutritionStore.self) private var nutrition
     @State private var showingWeightEntry = false
+    var onSwitchProfile: () -> Void = {}
 
     var body: some View {
         NavigationStack {
@@ -116,6 +117,14 @@ struct ProfileView: View {
                 }
 
                 settingsSection
+
+                Section {
+                    Button {
+                        onSwitchProfile()
+                    } label: {
+                        Label("Switch Profile", systemImage: "person.2.fill")
+                    }
+                }
 
                 Section {
                     LabeledContent("Version",
