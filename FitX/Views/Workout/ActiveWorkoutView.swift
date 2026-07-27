@@ -7,11 +7,24 @@ struct ActiveWorkoutView: View {
     @State private var showingExercisePicker = false
     @State private var plateTarget: PlateTarget?
 
+    /// Safe stand-in for `Binding($store.activeWorkout)`, whose getter
+    /// force-unwraps. Discarding nils activeWorkout while the cover is still
+    /// dismissing, and any child re-render (List diff, TextField commit) that
+    /// reads the old binding then crashes. The snapshot fallback keeps reads
+    /// alive through the dismiss animation; writes after discard are dropped.
+    private func activeWorkoutBinding(_ store: WorkoutStore) -> Binding<Workout>? {
+        guard let snapshot = store.activeWorkout else { return nil }
+        return Binding(
+            get: { store.activeWorkout ?? snapshot },
+            set: { if store.activeWorkout != nil { store.activeWorkout = $0 } }
+        )
+    }
+
     var body: some View {
         @Bindable var store = store
         NavigationStack {
             Group {
-                if let workout = Binding($store.activeWorkout) {
+                if let workout = activeWorkoutBinding(store) {
                     WorkoutFormView(workout: workout,
                                     showingExercisePicker: $showingExercisePicker,
                                     plateTarget: $plateTarget)
@@ -105,8 +118,12 @@ struct WorkoutFormView: View {
                     SetColumnHeader(exercise: wex.exercise, unit: store.settings.weightUnit)
 
                     ForEach($wex.sets) { $set in
+                        // Only normal sets get numbers — W/F/D rows show their
+                        // marker, so "W, 1, 2" instead of "W, 2, 3".
+                        let index = wex.sets.firstIndex(where: { $0.id == set.id }) ?? 0
                         SetRow(set: $set,
-                               number: (wex.sets.firstIndex(where: { $0.id == set.id }) ?? 0) + 1,
+                               number: wex.sets.prefix(index).filter { $0.type == .normal }.count + 1,
+                               index: index,
                                exercise: wex.exercise) {
                             store.restTimer.start(seconds: store.settings.restSeconds)
                         }
@@ -212,7 +229,10 @@ struct SetColumnHeader: View {
 
 struct SetRow: View {
     @Binding var set: WorkoutSet
+    /// Display ordinal among normal sets (specials show W/F/D instead).
     let number: Int
+    /// Raw position in the exercise — used to line up the "previous" column.
+    let index: Int
     let exercise: Exercise
     var onCompleted: () -> Void
     @Environment(WorkoutStore.self) private var store
@@ -291,7 +311,7 @@ struct SetRow: View {
     }
 
     private var previous: WorkoutSet? {
-        store.previousSet(for: exercise.id, at: number - 1)
+        store.previousSet(for: exercise.id, at: index)
     }
 
     private var previousLabel: String {
