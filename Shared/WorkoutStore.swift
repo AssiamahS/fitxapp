@@ -21,6 +21,8 @@ final class WorkoutStore {
     var activeWorkout: Workout?
     /// Live ticker from a running watch session. Phone-side only, never persisted.
     var watchMetrics: WatchLiveMetrics?
+    /// The workout that just moved into history; drives the "Nice work!" card. Never persisted.
+    var lastFinishedWorkout: Workout?
     let restTimer = RestTimer()
 
     private let fileURL: URL
@@ -111,6 +113,7 @@ final class WorkoutStore {
         }
         history.insert(workout, at: 0)
         save()
+        lastFinishedWorkout = workout
         return workout
     }
 

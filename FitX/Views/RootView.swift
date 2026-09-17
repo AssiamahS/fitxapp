@@ -19,6 +19,10 @@ struct RootView: View {
         .fullScreenCover(item: $store.activeWorkout) { _ in
             ActiveWorkoutView()
         }
+        .sheet(item: $store.lastFinishedWorkout) { workout in
+            WorkoutCompleteView(workout: workout)
+                .presentationDragIndicator(.visible)
+        }
         .onChange(of: store.activeWorkout) { _, workout in
             LiveActivityManager.shared.sync(workout: workout, restTimer: store.restTimer)
         }
