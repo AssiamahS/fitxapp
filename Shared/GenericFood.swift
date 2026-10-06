@@ -17,10 +17,10 @@ struct GenericFood: Decodable, Identifiable, Hashable {
 
 enum ServingSize {
     /// Grams in a label serving string ("500 g", "1 bar (40 g)"), nil when the
-    /// label has no gram weight.
+    /// label has no weight. Drinks list ml ("14 fl oz (414 ml)"), taken as ~1 g/ml.
     static func grams(from label: String?) -> Double? {
         guard let label,
-              let match = label.firstMatch(of: #/(\d+(?:\.\d+)?)\s*g\b/#),
+              let match = label.firstMatch(of: #/(\d+(?:\.\d+)?)\s*(?:g|ml)\b/#),
               let value = Double(match.1), value > 0 else { return nil }
         return value
     }

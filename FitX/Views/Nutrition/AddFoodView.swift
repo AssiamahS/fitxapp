@@ -142,13 +142,14 @@ struct AddFoodView: View {
         }
     }
 
-    /// What one serving logs ("625 kcal · 367 g"), falling back to the
+    /// What one serving logs ("625 kcal · 46 g protein"), falling back to the
     /// per-100 g rate when the label has no gram weight.
     private func caloriesLabel(_ product: OFFProduct) -> String {
         guard let grams = ServingSize.grams(from: product.servingSize) else {
-            return "\(Int(product.caloriesPer100g)) kcal / 100 g"
+            return "\(Int(product.caloriesPer100g)) kcal · \(Int(product.proteinPer100g)) g protein / 100 g"
         }
-        return "\(Int((product.caloriesPer100g * grams / 100).rounded())) kcal · \(Int(grams)) g"
+        let protein = Int((product.proteinPer100g * grams / 100).rounded())
+        return "\(Int((product.caloriesPer100g * grams / 100).rounded())) kcal · \(protein) g protein"
     }
 
     private func runSearch() {
@@ -214,41 +215,75 @@ struct ServingSheet: View {
     @Environment(NutritionStore.self) private var nutrition
     @Environment(\.dismiss) private var dismiss
     @State private var grams: Double
+    /// Gram weight of one label serving (a bottle, a bowl), nil when the
+    /// label has none and the amount is entered in grams only.
+    private let servingGrams: Double?
 
     init(product: OFFProduct, day: Date, meal: Meal, onAdded: @escaping () -> Void) {
         self.product = product
         self.day = day
         self.meal = meal
         self.onAdded = onAdded
-        // Start at the label serving (a whole bowl, one bar) instead of a flat 100 g.
-        _grams = State(initialValue: ServingSize.grams(from: product.servingSize) ?? 100)
+        servingGrams = ServingSize.grams(from: product.servingSize)
+        // Start at one label serving instead of a flat 100 g.
+        _grams = State(initialValue: servingGrams ?? 100)
+    }
+
+    private var servings: Binding<Double> {
+        Binding(
+            get: { grams / (servingGrams ?? 100) },
+            set: { grams = max(0, $0) * (servingGrams ?? 100) }
+        )
     }
 
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    Text(product.name)
-                        .font(.headline)
-                    if let serving = product.servingSize, !serving.isEmpty {
-                        LabeledContent("Label serving", value: serving)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(product.name)
+                            .font(.headline)
+                        if !product.brand.isEmpty {
+                            Text(product.brand)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    HStack(alignment: .firstTextBaseline) {
+                        Text("\(Int(scaled(product.caloriesPer100g).rounded()))")
+                            .font(.system(size: 44, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                        Text("kcal")
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        macroColumn("Protein", product.proteinPer100g, .red)
+                        macroColumn("Carbs", product.carbsPer100g, .orange)
+                        macroColumn("Fat", product.fatPer100g, .yellow)
+                    }
+                }
+
+                Section {
+                    if let servingGrams {
+                        Stepper(value: servings, in: 0.25...20, step: 0.5) {
+                            HStack {
+                                Text("Servings")
+                                Spacer()
+                                Text(servings.wrappedValue, format: .number.precision(.fractionLength(0...2)))
+                                    .monospacedDigit()
+                            }
+                        }
+                        LabeledContent("1 serving", value: product.servingSize ?? "\(Int(servingGrams)) g")
                     }
                     HStack {
                         Text("Amount")
                         Spacer()
-                        TextField("g", value: $grams, format: .number)
+                        TextField("g", value: $grams, format: .number.precision(.fractionLength(0...1)))
                             .keyboardType(.decimalPad)
                             .multilineTextAlignment(.trailing)
                             .frame(width: 80)
                         Text("g")
                             .foregroundStyle(.secondary)
                     }
-                }
-                Section("This adds") {
-                    LabeledContent("Calories", value: "\(Int(scaled(product.caloriesPer100g))) kcal")
-                    LabeledContent("Protein", value: "\(Int(scaled(product.proteinPer100g))) g")
-                    LabeledContent("Carbs", value: "\(Int(scaled(product.carbsPer100g))) g")
-                    LabeledContent("Fat", value: "\(Int(scaled(product.fatPer100g))) g")
                 }
             }
             .navigationTitle("Serving")
@@ -260,7 +295,7 @@ struct ServingSheet: View {
                                                 meal: meal,
                                                 name: product.name,
                                                 brand: product.brand,
-                                                servingDescription: "\(Int(grams)) g",
+                                                servingDescription: servingDescription,
                                                 calories: scaled(product.caloriesPer100g),
                                                 protein: scaled(product.proteinPer100g),
                                                 carbs: scaled(product.carbsPer100g),
@@ -275,6 +310,26 @@ struct ServingSheet: View {
                 }
             }
         }
+    }
+
+    private func macroColumn(_ label: String, _ per100: Double, _ tint: Color) -> some View {
+        VStack(spacing: 2) {
+            Text("\(Int(scaled(per100).rounded())) g")
+                .font(.headline)
+                .monospacedDigit()
+            Text(label)
+                .font(.caption2)
+                .foregroundStyle(tint)
+        }
+        .frame(minWidth: 52)
+    }
+
+    /// "1 serving" / "2 servings" when a label serving exists, grams otherwise.
+    private var servingDescription: String {
+        guard servingGrams != nil else { return "\(Int(grams)) g" }
+        let count = servings.wrappedValue
+        let number = count.formatted(.number.precision(.fractionLength(0...2)))
+        return "\(number) serving\(count == 1 ? "" : "s") · \(Int(grams)) g"
     }
 
     private func scaled(_ per100: Double) -> Double {

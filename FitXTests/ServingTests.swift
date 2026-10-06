@@ -7,6 +7,7 @@ final class ServingTests: XCTestCase {
         XCTAssertEqual(ServingSize.grams(from: "30g"), 30)
         XCTAssertEqual(ServingSize.grams(from: "1 bar (40 g)"), 40)
         XCTAssertEqual(ServingSize.grams(from: "12.5 g"), 12.5)
+        XCTAssertEqual(ServingSize.grams(from: "14 fl oz (414 ml)"), 414)
         XCTAssertNil(ServingSize.grams(from: "1 cup"))
         XCTAssertNil(ServingSize.grams(from: nil))
     }
