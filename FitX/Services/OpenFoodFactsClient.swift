@@ -19,7 +19,7 @@ enum OpenFoodFactsClient {
         case badResponse
     }
 
-    private static let fields = "code,product_name,brands,nutriments,serving_size"
+    private static let fields = "code,product_name,brands,nutriments,serving_size,quantity"
 
     // OpenFoodFacts blocks/throttles default CFNetwork agents; they require
     // an identifying User-Agent from API consumers.
@@ -31,7 +31,17 @@ enum OpenFoodFactsClient {
         Locale.current.region?.identifier == "US" ? "us.openfoodfacts.org" : "world.openfoodfacts.org"
     }
 
+    /// Classic search first (country-scoped); the classic servers 503 under
+    /// load, so fall back to the search-a-licious engine over the same data.
     static func search(_ query: String) async throws -> [OFFProduct] {
+        do {
+            return try await classicSearch(query)
+        } catch {
+            return try await searchalicious(query)
+        }
+    }
+
+    private static func classicSearch(_ query: String) async throws -> [OFFProduct] {
         var components = URLComponents(string: "https://\(searchHost)/cgi/search.pl")!
         components.queryItems = [
             URLQueryItem(name: "search_terms", value: query),
@@ -51,6 +61,24 @@ enum OpenFoodFactsClient {
             throw ClientError.badResponse
         }
         return products.compactMap(product(from:))
+    }
+
+    private static func searchalicious(_ query: String) async throws -> [OFFProduct] {
+        var components = URLComponents(string: "https://search.openfoodfacts.org/search")!
+        components.queryItems = [
+            URLQueryItem(name: "q", value: query),
+            URLQueryItem(name: "page_size", value: "25"),
+            URLQueryItem(name: "fields", value: fields),
+        ]
+        var request = URLRequest(url: components.url!)
+        request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard (response as? HTTPURLResponse)?.statusCode == 200,
+              let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let hits = json["hits"] as? [[String: Any]] else {
+            throw ClientError.badResponse
+        }
+        return hits.compactMap(product(from:))
     }
 
     static func product(barcode: String) async throws -> OFFProduct? {
@@ -78,14 +106,29 @@ enum OpenFoodFactsClient {
         let kcal = number(nutriments["energy-kcal_100g"])
         // Products with no calorie data are useless for macro logging.
         guard kcal > 0 else { return nil }
+        // Classic API sends brands as "A,B"; search-a-licious as ["A", "B"].
+        let brand = (raw["brands"] as? String)
+            ?? (raw["brands"] as? [String])?.joined(separator: ", ")
+            ?? ""
         return OFFProduct(code: code,
                           name: name,
-                          brand: (raw["brands"] as? String) ?? "",
+                          brand: brand,
                           caloriesPer100g: kcal,
                           proteinPer100g: number(nutriments["proteins_100g"]),
                           carbsPer100g: number(nutriments["carbohydrates_100g"]),
                           fatPer100g: number(nutriments["fat_100g"]),
-                          servingSize: raw["serving_size"] as? String)
+                          servingSize: servingSize(from: raw))
+    }
+
+    /// Label serving, else the package size for single-bottle drinks
+    /// ("414 ml") — many entries skip serving_size, and logging a 14 oz
+    /// shake as 100 g undercounts it 4x.
+    private static func servingSize(from raw: [String: Any]) -> String? {
+        if let serving = raw["serving_size"] as? String, !serving.isEmpty { return serving }
+        guard let quantity = raw["quantity"] as? String,
+              quantity.lowercased().contains("ml"),
+              let ml = ServingSize.grams(from: quantity), ml <= 750 else { return nil }
+        return "\(Int(ml)) ml"
     }
 
     private static func number(_ value: Any?) -> Double {
