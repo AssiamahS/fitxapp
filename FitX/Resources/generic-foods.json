@@ -843,6 +843,20 @@
   ]
  },
  {
+  "name": "Chipotle Barbacoa Bowl",
+  "caloriesPer100g": 170.3,
+  "proteinPer100g": 12.8,
+  "carbsPer100g": 16.8,
+  "fatPer100g": 5.6,
+  "servingGrams": 367,
+  "synonyms": [
+   "barbacoa bowl",
+   "chipotle",
+   "my chipotle",
+   "usual chipotle"
+  ]
+ },
+ {
   "name": "Chipotle Bowl",
   "caloriesPer100g": 140,
   "proteinPer100g": 9.0,

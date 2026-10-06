@@ -204,7 +204,16 @@ struct ServingSheet: View {
 
     @Environment(NutritionStore.self) private var nutrition
     @Environment(\.dismiss) private var dismiss
-    @State private var grams: Double = 100
+    @State private var grams: Double
+
+    init(product: OFFProduct, day: Date, meal: Meal, onAdded: @escaping () -> Void) {
+        self.product = product
+        self.day = day
+        self.meal = meal
+        self.onAdded = onAdded
+        // Start at the label serving (a whole bowl, one bar) instead of a flat 100 g.
+        _grams = State(initialValue: ServingSize.grams(from: product.servingSize) ?? 100)
+    }
 
     var body: some View {
         NavigationStack {

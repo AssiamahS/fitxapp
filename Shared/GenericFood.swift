@@ -14,3 +14,14 @@ struct GenericFood: Decodable, Identifiable, Hashable {
 
     var id: String { name }
 }
+
+enum ServingSize {
+    /// Grams in a label serving string ("500 g", "1 bar (40 g)"), nil when the
+    /// label has no gram weight.
+    static func grams(from label: String?) -> Double? {
+        guard let label,
+              let match = label.firstMatch(of: #/(\d+(?:\.\d+)?)\s*g\b/#),
+              let value = Double(match.1), value > 0 else { return nil }
+        return value
+    }
+}
