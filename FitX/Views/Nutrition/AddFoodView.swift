@@ -133,13 +133,22 @@ struct AddFoodView: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    Text("\(Int(product.caloriesPer100g)) kcal / 100 g")
+                    Text(caloriesLabel(product))
                         .monospacedDigit()
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
         }
+    }
+
+    /// What one serving logs ("625 kcal · 367 g"), falling back to the
+    /// per-100 g rate when the label has no gram weight.
+    private func caloriesLabel(_ product: OFFProduct) -> String {
+        guard let grams = ServingSize.grams(from: product.servingSize) else {
+            return "\(Int(product.caloriesPer100g)) kcal / 100 g"
+        }
+        return "\(Int((product.caloriesPer100g * grams / 100).rounded())) kcal · \(Int(grams)) g"
     }
 
     private func runSearch() {
