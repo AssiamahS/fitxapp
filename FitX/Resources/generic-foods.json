@@ -869,6 +869,273 @@
   ]
  },
  {
+  "name": "Dunkin' Sausage Egg & Cheese Croissant",
+  "caloriesPer100g": 378.9,
+  "proteinPer100g": 11.1,
+  "carbsPer100g": 22.1,
+  "fatPer100g": 27.4,
+  "servingGrams": 190,
+  "synonyms": [
+   "sausage egg cheese croissant",
+   "dunkin sausage egg cheese croissant",
+   "dunkin donuts sausage egg cheese croissant",
+   "dd sausage egg cheese croissant"
+  ]
+ },
+ {
+  "name": "Dunkin' Sausage Egg & Cheese English Muffin",
+  "caloriesPer100g": 312.5,
+  "proteinPer100g": 13.1,
+  "carbsPer100g": 20.0,
+  "fatPer100g": 20.0,
+  "servingGrams": 160,
+  "synonyms": [
+   "sausage egg cheese english muffin",
+   "dunkin sausage egg cheese english muffin",
+   "dunkin donuts sausage egg cheese english muffin",
+   "dd sausage egg cheese english muffin"
+  ]
+ },
+ {
+  "name": "Dunkin' Sausage Egg & Cheese Bagel",
+  "caloriesPer100g": 295.7,
+  "proteinPer100g": 12.2,
+  "carbsPer100g": 29.1,
+  "fatPer100g": 14.3,
+  "servingGrams": 230,
+  "synonyms": [
+   "sausage egg cheese bagel",
+   "dunkin sausage egg cheese bagel",
+   "dunkin donuts sausage egg cheese bagel",
+   "dd sausage egg cheese bagel"
+  ]
+ },
+ {
+  "name": "McDonald's Sausage McMuffin with Egg",
+  "caloriesPer100g": 290.9,
+  "proteinPer100g": 12.1,
+  "carbsPer100g": 18.2,
+  "fatPer100g": 18.8,
+  "servingGrams": 165,
+  "synonyms": [
+   "sausage mcmuffin",
+   "mcdonalds sausage mcmuffin",
+   "mcd sausage mcmuffin",
+   "mickey d sausage mcmuffin",
+   "sausage egg mcmuffin",
+   "mcdonalds sausage egg mcmuffin",
+   "mcd sausage egg mcmuffin",
+   "mickey d sausage egg mcmuffin",
+   "mcmuffin",
+   "mcdonalds mcmuffin",
+   "mcd mcmuffin",
+   "mickey d mcmuffin"
+  ]
+ },
+ {
+  "name": "McDonald's Sausage Egg & Cheese McGriddle",
+  "caloriesPer100g": 275.0,
+  "proteinPer100g": 11.0,
+  "carbsPer100g": 22.0,
+  "fatPer100g": 16.5,
+  "servingGrams": 200,
+  "synonyms": [
+   "mcgriddle",
+   "mcdonalds mcgriddle",
+   "mcd mcgriddle",
+   "mickey d mcgriddle",
+   "sausage egg cheese mcgriddle",
+   "mcdonalds sausage egg cheese mcgriddle",
+   "mcd sausage egg cheese mcgriddle",
+   "mickey d sausage egg cheese mcgriddle"
+  ]
+ },
+ {
+  "name": "McDonald's Big Mac",
+  "caloriesPer100g": 268.2,
+  "proteinPer100g": 11.4,
+  "carbsPer100g": 20.5,
+  "fatPer100g": 15.5,
+  "servingGrams": 220,
+  "synonyms": [
+   "big mac",
+   "mcdonalds big mac",
+   "mcd big mac",
+   "mickey d big mac"
+  ]
+ },
+ {
+  "name": "McDonald's 10 pc McNuggets",
+  "caloriesPer100g": 256.2,
+  "proteinPer100g": 14.4,
+  "carbsPer100g": 16.2,
+  "fatPer100g": 15.0,
+  "servingGrams": 160,
+  "synonyms": [
+   "mcnuggets",
+   "mcdonalds mcnuggets",
+   "mcd mcnuggets",
+   "mickey d mcnuggets",
+   "10 piece nuggets",
+   "mcdonalds 10 piece nuggets",
+   "mcd 10 piece nuggets",
+   "mickey d 10 piece nuggets",
+   "mcdonalds chicken nuggets",
+   "mcd chicken nuggets",
+   "mickey d chicken nuggets"
+  ]
+ },
+ {
+  "name": "McDonald's Medium Fries",
+  "caloriesPer100g": 288.3,
+  "proteinPer100g": 4.5,
+  "carbsPer100g": 38.7,
+  "fatPer100g": 13.5,
+  "servingGrams": 111,
+  "synonyms": [
+   "mcdonalds fries",
+   "mcdonalds mcdonalds fries",
+   "mcd mcdonalds fries",
+   "mickey d mcdonalds fries",
+   "medium fries",
+   "mcdonalds medium fries",
+   "mcd medium fries",
+   "mickey d medium fries"
+  ]
+ },
+ {
+  "name": "Burger King Whopper",
+  "caloriesPer100g": 248.1,
+  "proteinPer100g": 10.4,
+  "carbsPer100g": 18.1,
+  "fatPer100g": 13.7,
+  "servingGrams": 270,
+  "synonyms": [
+   "whopper",
+   "burger king whopper",
+   "bk whopper"
+  ]
+ },
+ {
+  "name": "Burger King Sausage Egg & Cheese Croissan'wich",
+  "caloriesPer100g": 308.2,
+  "proteinPer100g": 12.3,
+  "carbsPer100g": 15.8,
+  "fatPer100g": 21.6,
+  "servingGrams": 171,
+  "synonyms": [
+   "croissanwich",
+   "burger king croissanwich",
+   "bk croissanwich",
+   "sausage egg cheese croissanwich",
+   "burger king sausage egg cheese croissanwich",
+   "bk sausage egg cheese croissanwich"
+  ]
+ },
+ {
+  "name": "Bojangles Cajun Filet Biscuit",
+  "caloriesPer100g": 300.0,
+  "proteinPer100g": 12.1,
+  "carbsPer100g": 30.0,
+  "fatPer100g": 14.2,
+  "servingGrams": 190,
+  "synonyms": [
+   "cajun filet biscuit",
+   "bojangles cajun filet biscuit",
+   "bojangles' cajun filet biscuit",
+   "cajun chicken biscuit",
+   "bojangles cajun chicken biscuit",
+   "bojangles' cajun chicken biscuit"
+  ]
+ },
+ {
+  "name": "Bojangles Sausage Biscuit",
+  "caloriesPer100g": 335.7,
+  "proteinPer100g": 10.7,
+  "carbsPer100g": 27.1,
+  "fatPer100g": 20.0,
+  "servingGrams": 140,
+  "synonyms": [
+   "bojangles sausage biscuit",
+   "bojangles bojangles sausage biscuit",
+   "bojangles' bojangles sausage biscuit"
+  ]
+ },
+ {
+  "name": "Bojangles Sausage & Egg Biscuit",
+  "caloriesPer100g": 305.6,
+  "proteinPer100g": 11.7,
+  "carbsPer100g": 21.1,
+  "fatPer100g": 18.9,
+  "servingGrams": 180,
+  "synonyms": [
+   "sausage egg biscuit",
+   "bojangles sausage egg biscuit",
+   "bojangles' sausage egg biscuit"
+  ]
+ },
+ {
+  "name": "Bojangles Bacon Egg & Cheese Biscuit",
+  "caloriesPer100g": 300.0,
+  "proteinPer100g": 16.5,
+  "carbsPer100g": 23.5,
+  "fatPer100g": 15.9,
+  "servingGrams": 170,
+  "synonyms": [
+   "bacon egg cheese biscuit",
+   "bojangles bacon egg cheese biscuit",
+   "bojangles' bacon egg cheese biscuit"
+  ]
+ },
+ {
+  "name": "Domino's Large Pepperoni Extra Cheese (1 slice)",
+  "caloriesPer100g": 275.0,
+  "proteinPer100g": 11.7,
+  "carbsPer100g": 29.2,
+  "fatPer100g": 12.5,
+  "servingGrams": 120,
+  "synonyms": [
+   "dominos pepperoni",
+   "dominos dominos pepperoni",
+   "domino's dominos pepperoni",
+   "pepperoni slice",
+   "dominos pepperoni slice",
+   "domino's pepperoni slice",
+   "large pepperoni",
+   "dominos large pepperoni",
+   "domino's large pepperoni"
+  ]
+ },
+ {
+  "name": "Domino's Medium Pepperoni Extra Cheese (1 slice)",
+  "caloriesPer100g": 272.7,
+  "proteinPer100g": 11.4,
+  "carbsPer100g": 29.5,
+  "fatPer100g": 12.5,
+  "servingGrams": 88,
+  "synonyms": [
+   "medium pepperoni",
+   "dominos medium pepperoni",
+   "domino's medium pepperoni"
+  ]
+ },
+ {
+  "name": "Domino's Parmesan Bread Bites (4 pc)",
+  "caloriesPer100g": 343.8,
+  "proteinPer100g": 7.8,
+  "carbsPer100g": 42.2,
+  "fatPer100g": 15.6,
+  "servingGrams": 64,
+  "synonyms": [
+   "bread bites",
+   "dominos bread bites",
+   "domino's bread bites",
+   "parmesan bread bites",
+   "dominos parmesan bread bites",
+   "domino's parmesan bread bites"
+  ]
+ },
+ {
   "name": "Smoothie",
   "caloriesPer100g": 60,
   "proteinPer100g": 1.5,

@@ -24,4 +24,18 @@ final class ServingTests: XCTestCase {
         XCTAssertEqual(kcal, 625, accuracy: 10)
         XCTAssertEqual(protein, 47, accuracy: 2)
     }
+
+    /// Calories must roughly agree with 4/4/9 kcal per gram of P/C/F, which
+    /// catches typos in the hand-entered restaurant values.
+    func testFoodCaloriesMatchMacros() throws {
+        let url = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .appendingPathComponent("FitX/Resources/generic-foods.json")
+        let foods = try JSONDecoder().decode([GenericFood].self, from: Data(contentsOf: url))
+        for food in foods where food.caloriesPer100g > 20 {
+            let fromMacros = 4 * food.proteinPer100g + 4 * food.carbsPer100g + 9 * food.fatPer100g
+            XCTAssertEqual(fromMacros, food.caloriesPer100g,
+                           accuracy: food.caloriesPer100g * 0.25, food.name)
+        }
+    }
 }
